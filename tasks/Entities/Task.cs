@@ -1,12 +1,15 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace tasks.Entities
 {
     public class Task
     {
-        
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
 
+        [Required]
         public string Title { get; set; }
 
         public string Description { get; set; }

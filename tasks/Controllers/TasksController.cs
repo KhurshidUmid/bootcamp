@@ -40,7 +40,7 @@ namespace tasks.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> QueryTasks([FromRoute]TaskQuery query)
+        public async Task<IActionResult> QueryTasks([FromQuery]TaskQuery query)
         {
             var tasks = await _storage.GetTasksAsync(title: query.Title, id: query.Id);
 
@@ -50,6 +50,34 @@ namespace tasks.Controllers
             }
 
             return NotFound("No tasks exist!");
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateTaskAsync([FromBody]tasks.Models.Task task)
+        {
+            var entity = task.ToTaskEntity();
+            var updateResult = await _storage.UpdateTaskAsync(entity);
+
+            if(updateResult.isSuccess)
+            {
+                return Ok();
+            }
+
+            return BadRequest(updateResult.exception.Message);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync([FromBody]Models.Task task)
+        {
+            var entity = task.ToTaskEntity();
+            var deleteResult = await _storage.DeleteTask(entity);
+
+            if(deleteResult.isSuccess)
+            {
+                return Ok();
+            }
+
+            return BadRequest(deleteResult.exception.Message);
         }
     }
 }

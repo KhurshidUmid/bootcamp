@@ -1,3 +1,4 @@
+using System.Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using tasks.Data;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace tasks.Services
 {
@@ -105,6 +108,46 @@ namespace tasks.Services
                 _logger.LogInformation($"Inserting task to DB failed: {e.Message}", e);
                 return (false, e);
             }
+        }
+        public async Task<(bool isSuccess, Exception exception)> UpdateTaskAsync(Entities.Task task)
+        {
+            try
+            {
+                if(await _context.Tasks.AnyAsync(t => t.Id == task.Id))
+                {
+                    _context.Tasks.Update(task);
+                    await _context.SaveChangesAsync();
+
+                    return (true, null);
+                }
+                else
+                {
+                    return (false, new Exception($"Task with given ID: {task.Id} doesnt exist!"));
+                }
+            }
+            catch(Exception e)
+            {
+                return (false, e);
+            }
+        }
+        public async Task<(bool isSuccess, Exception exception)> DeleteTask(Entities.Task task)
+        {
+            try
+            {
+                _context.Tasks.Remove(task);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"Task deleted from DB: {task.Id}");
+
+                return (true, null);
+            }
+            catch(Exception e)
+            {
+                _logger.LogInformation($"Deleting failed: {e.Message}", e);
+                return (false, e);
+            }
+            
+
         }
     }
 }

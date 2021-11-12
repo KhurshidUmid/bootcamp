@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using tasks.Data;
+using tasks.Services;
 
 namespace tasks
 {
@@ -31,6 +32,7 @@ namespace tasks
             services.AddDbContext<TaskDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("TaskConnection")));
 
+            services.AddTransient<IStorageService, DbStorageService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

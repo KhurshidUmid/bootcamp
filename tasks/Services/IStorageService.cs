@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace tasks.Services
 {
@@ -8,7 +9,8 @@ namespace tasks.Services
     {
         Task<(bool IsSuccess, Exception exception)> InsertTaskAsync(Entities.Task task);
 
-        Task<List<Entities.Task>> GetTasksAsync(Guid id = default(Guid),
+        Task<List<Entities.Task>> GetTasksAsync(
+            Guid id = default(Guid),
             string title = default(string),
             string description = default(string),
             string tags = default(string),
@@ -19,5 +21,11 @@ namespace tasks.Services
             DateTimeOffset atATime = default(DateTimeOffset),
             string location = default(string),
             string url = default(string));
+        
+        Task<(bool isSuccess, Exception exception)> UpdateTaskAsync(Entities.Task task);
+
+
+        Task<(bool isSuccess, Exception exception)> DeleteTask(Entities.Task task);
+        
     }
 }
