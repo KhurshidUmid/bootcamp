@@ -39,17 +39,17 @@ namespace tasks.Controllers
             return StatusCode((int)HttpStatusCode.InternalServerError, new { message = insertResult.exception.Message });
         }
 
-        // [HttpGet]
-        // public async Task<IActionResult> QueryTasks([FromQuery]TaskQuery query)
-        // {
-        //     var tasks = await _storage.GetTasksAsync(title: query.Title, id: query.Id);
+        [HttpGet]
+        public async Task<IActionResult> QueryTasks([FromRoute]TaskQuery query)
+        {
+            var tasks = await _storage.GetTasksAsync(title: query.Title, id: query.Id);
 
-        //     if(tasks.Any())
-        //     {
-        //         return Ok(tasks);
-        //     }
+            if(tasks.Any())
+            {
+                return Ok(tasks);
+            }
 
-        //     return NotFound("No tasks exist!");
-        // }
+            return NotFound("No tasks exist!");
+        }
     }
 }

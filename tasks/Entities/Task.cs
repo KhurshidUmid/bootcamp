@@ -15,9 +15,9 @@ namespace tasks.Entities
 
         public DateTimeOffset OnADay { get; set; }
         public DateTimeOffset AtATime { get; set; }
-        public ETaskStatus Status { get; set; }
-        public ETaskRepeat Repeat { get; set; }
-        public ETaskPriority Priority { get; set; }
+        public ETaskStatus? Status { get; set; }
+        public ETaskRepeat? Repeat { get; set; }
+        public ETaskPriority? Priority { get; set; }
         public string Location { get; set; }
         public string Url { get; set; }
 

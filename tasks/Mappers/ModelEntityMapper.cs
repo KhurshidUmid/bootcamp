@@ -18,5 +18,25 @@ namespace tasks.Mappers
 
             );
         }
+
+
+
+        public static Entities.Task ToTaskEntity(this Models.Task task)
+        {
+            return new Entities.Task(
+                title: task.Title,
+                description: task.Description,
+                tags: task.Tags is null ? string.Empty : string.Join(',', task.Tags),
+                location: task.Location is null ? string.Empty : string.Format($"{task.Location.Latitude},{task.Location.Longitude}"),
+                atATime: task.AtATime,
+                onADay: task.OnADay,
+                repeat: task.Repeat.ToEntityETaskRepeat(),
+                status: task.Status.ToEntityETaskStatus(),
+                priority: task.Priority.ToEntityETaskPriority(),
+                url: task.Url)
+                {
+                    Id = task.Id
+                };
+        }
     }
 }

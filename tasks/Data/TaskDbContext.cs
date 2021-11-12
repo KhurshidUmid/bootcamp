@@ -9,7 +9,7 @@ namespace tasks.Data
         public DbSet<Task> Tasks { get; set; }
 
         public TaskDbContext(DbContextOptions options)
-            : base(options) {}
+            : base(options) { }
         
         
     }
