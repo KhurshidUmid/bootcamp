@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Mime;
@@ -66,11 +67,13 @@ namespace tasks.Controllers
             return BadRequest(updateResult.exception.Message);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync([FromBody]Models.Task task)
+        [HttpDelete]
+        [Route("{id}")]
+        // [Consumes(MediaTypeNames.Application.Json)]
+        public async Task<IActionResult> DeleteAsync([FromRoute]Guid id)
         {
-            var entity = task.ToTaskEntity();
-            var deleteResult = await _storage.DeleteTask(entity);
+            
+            var deleteResult = await _storage.DeleteTask(id);
 
             if(deleteResult.isSuccess)
             {

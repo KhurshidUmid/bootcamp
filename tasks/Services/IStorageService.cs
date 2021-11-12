@@ -25,7 +25,7 @@ namespace tasks.Services
         Task<(bool isSuccess, Exception exception)> UpdateTaskAsync(Entities.Task task);
 
 
-        Task<(bool isSuccess, Exception exception)> DeleteTask(Entities.Task task);
+        Task<(bool isSuccess, Exception exception)> DeleteTask(Guid id);
         
     }
 }

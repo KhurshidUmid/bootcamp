@@ -130,14 +130,14 @@ namespace tasks.Services
                 return (false, e);
             }
         }
-        public async Task<(bool isSuccess, Exception exception)> DeleteTask(Entities.Task task)
+        public async Task<(bool isSuccess, Exception exception)> DeleteTask(Guid id)
         {
             try
             {
-                _context.Tasks.Remove(task);
+                _context.Tasks.Remove(_context.Tasks.FirstOrDefault(u => u.Id == id));
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"Task deleted from DB: {task.Id}");
+                _logger.LogInformation($"Task deleted from DB: {id}");
 
                 return (true, null);
             }
