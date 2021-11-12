@@ -1,12 +1,12 @@
-namespace tasks.Entities
+namespace tasks.Models
 {
     public enum ETaskRepeat
     {
+        Never,
         Hourly,
         Daily,
         Weekly,
         Monthly,
-        Yearly,
-        Never
+        Yearly
     }
 }

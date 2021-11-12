@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using tasks.Entites;
+using tasks.Entities;
 
 
 namespace tasks.Data

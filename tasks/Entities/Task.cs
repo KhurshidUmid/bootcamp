@@ -1,19 +1,19 @@
 using System;
 
-namespace tasks.Entites
+namespace tasks.Entities
 {
     public class Task
     {
         
         public Guid Id { get; set; }
 
-        public string Tile { get; set; }
+        public string Title { get; set; }
 
-        public string Descriptione { get; set; }
+        public string Description { get; set; }
 
         public string Tags { get; set; }
 
-        public DateTimeOffset OnADaye { get; set; }
+        public DateTimeOffset OnADay { get; set; }
         public DateTimeOffset AtATime { get; set; }
         public ETaskStatus Status { get; set; }
         public ETaskRepeat Repeat { get; set; }
@@ -27,13 +27,13 @@ namespace tasks.Entites
         [Obsolete("Used only for entity binding", true)]
         public Task() { }
         
-        public Task(string tile, string descriptione = "", string tags = "", DateTimeOffset onADaye = default(DateTimeOffset), DateTimeOffset atATime = default(DateTimeOffset), ETaskStatus status = ETaskStatus.None, ETaskRepeat repeat = ETaskRepeat.Never, ETaskPriority priority = ETaskPriority.None, string location = "", string url = "")
+        public Task(string title, string description = "", string tags = "", DateTimeOffset onADay = default(DateTimeOffset), DateTimeOffset atATime = default(DateTimeOffset), ETaskStatus status = ETaskStatus.None, ETaskRepeat repeat = ETaskRepeat.Never, ETaskPriority priority = ETaskPriority.None, string location = "", string url = "")
         {
             Id = Guid.NewGuid();
-            Tile = tile;
-            Descriptione = descriptione;
+            Title = title;
+            Description = description;
             Tags = tags;
-            OnADaye = onADaye;
+            OnADay = onADay;
             AtATime = atATime;
             Status = status;
             Repeat = repeat;

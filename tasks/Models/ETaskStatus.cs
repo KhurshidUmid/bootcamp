@@ -1,4 +1,4 @@
-namespace tasks.Entities
+namespace tasks.Models
 {
     public enum ETaskStatus
     {
