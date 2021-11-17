@@ -5,9 +5,11 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using pizza.Entities;
 using pizza.Mappers;
 using pizza.Models;
 using pizza.Services;
+
 
 namespace pizza.Controllers
 {
@@ -27,9 +29,9 @@ namespace pizza.Controllers
 		
 		
         [HttpGet]
-        public async Task<ActionResult> QueryTasks([FromQuery]pizzaQuery query)
+        public async Task<ActionResult> QueryTasks()
         {
-            var tasks = await _pizzaStore.GetALLAsync(title: query.Title, id: query.Id);
+            var tasks = await _pizzaStore.QueryPizzasAsync();
 
             if(tasks.Any())
             {
@@ -46,93 +48,61 @@ namespace pizza.Controllers
         [Route("{id}")]
         public async Task<ActionResult> GetPizzaAsync([FromRoute]Guid id)
         {
-            var getResult = await _pizzaStore.GetPizzaAsync(id);
+            var getResult = await _pizzaStore.QueryPizzaAsync(id);
 
-                if(getResult.IsSuccess)
+                if(getResult is default(Pizza))
                 {
-                    return Ok();
+                    return NotFound($"Pizza with ID {id} not found");
                 }
 
-                return BadRequest(getResult.exception.Message);
-
-                
-            // var pizz = await _pizzaStore.Pizza
-            //     .AsNoTracking()
-            //     .FirstOrDefaultAsync(p => p.Id == id);
-
-            // if(pizza is default(Pizza))
-            // {
-            //     return NotFound($"Pizza with ID {id} not found");
-            // }
-
-            // return Ok(pizza);
+                return Ok(getResult);            
+        
         }
 
 
 		// POST - yangi pitsa turini yaratadi
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
-        public async Task<ActionResult> CreatePizzaAsync([FromBody]Models.Pizza pizza) 
+        public async Task<ActionResult> PostPizza([FromBody]Models.UpdatePizza pizza) 
         {            
-            var taskEntity = pizza.ToPizzaEntity();
-            var insertResult = await _pizzaStore.CreatePizzaAsync(taskEntity);
+            // var taskEntity = pizza.ToPizzaEntity();
+            // var insertResult = await _pizzaStore.CreatePizzaAsync(taskEntity);
 
-            if(insertResult.IsSuccess)
-            {
-                return CreatedAtAction("CreatePizza", taskEntity);
-            }
+            // if(insertResult.IsSuccess)
+            // {
+            //     return CreatedAtAction("CreatePizza", taskEntity);
+            // }
 
-            return StatusCode((int)HttpStatusCode.InternalServerError, new { message = insertResult.exception.Message });
-        
+            // return StatusCode((int)HttpStatusCode.InternalServerError, new { message = insertResult.Exception.Message });
+
+            return CreatedAtAction(nameof(PostPizza), await _pizzaStore.CreatePizzaAsync(pizza.ToPizzaEntity()));
         }
 
 
 		// PUT - berilgan pitsani o'zgartiradi
         [HttpPut]
         [Route("{id}")]
-        public async Task<ActionResult> UpdatePizzaAsync([FromRoute]Guid id, [FromBody]Models.Pizza pizza) 
+        public async Task<IActionResult> UpdatePizzaAsync([FromRoute]Guid id, [FromBody]UpdatePizza pizza) 
         {
             var entity = pizza.ToPizzaEntity();
-            var updateResult = await _pizzaStore.UpdatePizzaAsync(entity);
+            var updateResult = await _pizzaStore.UpdatePizzaAsync(entity, id);
 
-            if(updateResult.IsSuccess)
+            if(!_updatePizzaValid(pizza))
             {
-                return Ok();
+                return BadRequest("you shoud");
             }
-
-            return BadRequest(updateResult.exception.Message);
-
-
-
-            // var pizz = await _pizzaStore.GetPizzaAsync
-            //     .AsNoTracking()
-            //     .FirstOrDefaultAsync(u => u.Id == id);
-
-            // if(pizz is default(Pizza))
-            // {
-            //     return NotFound($"User with ID {id} not found");
-            // }
-
-            // if(!_updatePizzaAsyncValid(pizza))
-            // {
-            //     return BadRequest("You should change at least one property.");
-            // }
-
-            // pizz.Firstname = pizza.Firstname ?? pizz.Firstname;
-            // pizz.Lastname = pizza.Lastname ?? pizz.Lastname;
-            // pizz.Middlename = pizza.Middlename ?? pizz.Middlename;
-            // pizz.Email = pizza.Email ?? pizz.Email;
-            // pizz.Phone = pizza.Phone ?? pizz.Phone;
-            // pizz.Username = pizza.Username ?? pizz.Username;
-            // pizz.Password = pizza.Password ?? pizz.Password;
-
-            // pizz.ModifiedAt = DateTimeOffset.UtcNow;
-
-            // _context.Users.Update(pizz);
-            // await _context.SaveChangesAsync();
-
-            // return Ok();
+            return Ok(updateResult.Pizza);
         }
+
+        private bool _updatePizzaValid(UpdatePizza updatedPizza)
+        {
+            return !(updatedPizza.Title == null &&
+                     updatedPizza.Ingradients == null &&
+                     updatedPizza.ShortName == null);
+                    //  updatedPizza.StockStatus == null);
+        }
+            
+        
 
 
 		// DELETE - berilgan idga ega pitsani o'chirib yuboradi
@@ -140,14 +110,14 @@ namespace pizza.Controllers
         [Route("{id}")]
         public async Task<ActionResult> DeleteAsync([FromRoute]Guid id) 
         {
-              var deleteResult = await _pizzaStore.DeletePizzaAsync(id);
+              var deleteResult = await _pizzaStore.RemovePizzaAsync(id);
 
                 if(deleteResult.IsSuccess)
                 {
                     return Ok();
                 }
 
-                return BadRequest(deleteResult.exception.Message);
+                return BadRequest(deleteResult.Exception.Message);
         }
     }
 }

@@ -2,10 +2,8 @@ namespace pizza.Models
 {
     public enum EPizzaStockStatus
     {
-        None,
+        IN,
 
-        InProgress,
-        
-        Ready
+        OUT
     }
 }
