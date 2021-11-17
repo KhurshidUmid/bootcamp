@@ -82,29 +82,16 @@ namespace pizza.Controllers
 		// PUT - berilgan pitsani o'zgartiradi
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> UpdatePizzaAsync([FromRoute]Guid id, [FromBody]UpdatePizza pizza) 
+        public async Task<ActionResult> UpdatePizzaAsync([FromRoute]Guid id, [FromBody]UpdatePizza pizza) 
         {
             var entity = pizza.ToPizzaEntity();
             var updateResult = await _pizzaStore.UpdatePizzaAsync(entity, id);
 
-            if(!_updatePizzaValid(pizza))
-            {
-                return BadRequest("you shoud");
-            }
+            
             return Ok(updateResult.Pizza);
         }
 
-        private bool _updatePizzaValid(UpdatePizza updatedPizza)
-        {
-            return !(updatedPizza.Title == null &&
-                     updatedPizza.Ingradients == null &&
-                     updatedPizza.ShortName == null);
-                    //  updatedPizza.StockStatus == null);
-        }
-            
         
-
-
 		// DELETE - berilgan idga ega pitsani o'chirib yuboradi
         [HttpDelete]
         [Route("{id}")]
