@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+
 namespace movies.Entities
 {
     public class Movie
@@ -27,5 +28,7 @@ namespace movies.Entities
         public ICollection<Genre> Genres { get; set; }
 
         public ICollection<Actor> Actors { get; set; }
+
+        public ICollection<Image> Images { get; set; }
     }
 }

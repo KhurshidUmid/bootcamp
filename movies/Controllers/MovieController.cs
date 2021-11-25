@@ -60,18 +60,18 @@ namespace movies.Controllers
             return BadRequest(result.Exception.Message);
         }
 
-        // [HttpGet]
-        // public async Task<IActionResult> GetAsync()
-        // {
-        //     JsonSerializerOptions options = new()
-        //     {
-        //         ReferenceHandler = ReferenceHandler.IgnoreCycles,
-        //         WriteIndented = true
-        //     };
+        [HttpGet]
+        public async Task<IActionResult> GetAsync()
+        {
+            JsonSerializerOptions options = new()
+            {
+                ReferenceHandler = ReferenceHandler.Preserve,
+                WriteIndented = true
+            };
 
-        //     var json = JsonSerializer.Serialize(await _ms.GetAllAsync(), options);
-        //     return Ok(json);
-        // }
+            var json = JsonSerializer.Serialize(await _ms.GetAllAsync(), options);
+            return Ok(json);
+        }
 
 
 
