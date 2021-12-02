@@ -42,7 +42,7 @@ namespace MediaHub.Controllers
         public async Task<IActionResult> GetAds()
         {
             var ads = await _context.QueryAllAsync();
-                
+            
                
 
             return Ok(ads.Select(ad => 
