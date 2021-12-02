@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HubMedia.Migrations
 {
     [DbContext(typeof(HubMediaContext))]
-    [Migration("20211202061033_Initial")]
+    [Migration("20211202155341_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

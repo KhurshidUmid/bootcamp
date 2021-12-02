@@ -42,26 +42,65 @@ namespace HubMedia.Services
 
         public async Task<(bool IsSuccess, Exception Exception)> DeleteAsync(Guid id)
         {
-            var bad = await GetAsync(id);
-            bad.Medias = _context.MMedias.ToList();
-            if (bad == null) //default(Ad))
-            {
-                return (false, new Exception("Not found."));
-            }
+            var ad = await GetAsync(id);
+
             try
             {
-                _context.AAds.Remove(bad);
-                await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"Image with ID: {bad.Id} deleted from DB.");
+                try
+                {
 
+                    var medias = ad.Medias;
+                        
+                        foreach(var media in medias)
+                        {
+                            _context.MMedias.Remove(media);
+                            await _context.SaveChangesAsync();
+                        }
+                    
+            
+                    _context.AAds.Remove(await GetAsync(id));
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation($"Ad removed from DB: {id}");
+            
+                }
+                catch
+                {
+                    _context.AAds.Remove(await GetAsync(id));
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation($"Ad removed from DB: {id}");
+                }
                 return (true, null);
             }
-            catch (Exception e)
+
+            catch(Exception e)
             {
-                _logger.LogInformation($"Deleting image from DB failed.");
                 return (false, e);
             }
+
+
+
+
+            // var bad = await GetAsync(id);
+            // // bad.Medias = _context.MMedias.ToList();
+            // if (bad == default(Ad))
+            // {
+            //     return (false, new Exception("Not found."));
+            // }
+            // try
+            // {
+            //     _context.AAds.Remove(bad);
+            //     await _context.SaveChangesAsync();
+
+            //     _logger.LogInformation($"media with ID: {bad.Id} deleted from DB.");
+
+            //     return (true, null);
+            // }
+            // catch (Exception e)
+            // {
+            //     _logger.LogInformation($"Deleting media from DB failed.");
+            //     return (false, e);
+            // }
         }
 
         public Task<bool> ExistsAsync(Guid id)
